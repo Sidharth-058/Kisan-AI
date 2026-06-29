@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+requests
+beautifulsoup4
+google-genai
+torch
+torchvision
+pillow
+opencv-python-headless
+
