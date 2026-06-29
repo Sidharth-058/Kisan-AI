@@ -1,172 +1,203 @@
-# FarmX Backend Server
+# FarmX Frontend
 
-This is the backend server for the FarmX application. It handles all the heavy processing including:
-- User authentication and database management
-- Plant disease detection using ML models
-- Soil type classification using ML models
-- Fertilizer recommendations
-- User advice generation based on test results
+This is the frontend website for FarmX - a smart farming application. The frontend is a static website (HTML, CSS, JavaScript) that can be deployed to any web hosting service.
 
-## Prerequisites
+## Features
 
-- Python 3.8 or higher
-- At least 4GB RAM (for ML model inference)
-- 5GB free disk space (for datasets and models)
+- 🌾 Plant disease detection
+- 🌱 Soil type classification
+- 💡 Expert farming advice
+- 🌦️ Weather information
+- 💰 Market prices
+- 🛡️ Crop protection tips
+- 🌍 Multi-language support (English, Hindi, Telugu)
 
-## Quick Start
+## Configuration
 
-### 1. Start the Server
+### Setting Up Backend Connection
 
-The easiest way to start the server is using the startup script:
+Before deploying, you **must** configure the backend API URL:
 
+1. Open `shared/config.js`
+2. Update the `API_URL` with your backend server address:
+
+```javascript
+window.FARMX_CONFIG = {
+    API_URL: "https://your-backend-url.com",  // Change this!
+    DEBUG: false
+};
+```
+
+**Backend URL Options:**
+- Local testing: `http://localhost:8000`
+- ngrok tunnel: `https://abc123.ngrok.io`
+- Cloudflare tunnel: `https://your-tunnel.trycloudflare.com`
+- Custom domain: `https://api.yourdomain.com`
+
+## Deployment Options
+
+### Option 1: Netlify (Recommended)
+
+1. Create account at [netlify.com](https://www.netlify.com)
+2. Drag and drop the `frontend` folder to Netlify
+3. Your site will be live in seconds!
+
+**Or using Netlify CLI:**
 ```bash
-./start_server.sh
+npm install -g netlify-cli
+cd frontend
+netlify deploy --prod
 ```
 
-This script will:
-- Create a virtual environment (if it doesn't exist)
-- Install all dependencies
-- Start the FastAPI server on port 8000
+### Option 2: Vercel
 
-### 2. Manual Setup (Alternative)
-
-If you prefer manual setup:
-
+1. Create account at [vercel.com](https://vercel.com)
+2. Install Vercel CLI: `npm install -g vercel`
+3. Deploy:
 ```bash
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate  # On Linux/Mac
-# OR
-venv\Scripts\activate  # On Windows
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start server
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+cd frontend
+vercel --prod
 ```
 
-## Accessing the Server
+### Option 3: GitHub Pages
 
-Once started, the server will be available at:
-- **API Base URL**: `http://localhost:8000`
-- **API Documentation**: `http://localhost:8000/docs` (Swagger UI)
-- **Alternative Docs**: `http://localhost:8000/redoc` (ReDoc)
+1. Create a GitHub repository
+2. Push the `frontend` folder contents
+3. Go to Settings → Pages
+4. Select branch and folder
+5. Your site will be at `https://username.github.io/repo-name`
 
-## Exposing to the Internet
+### Option 4: Any Static Host
 
-To allow your frontend (hosted on a website) to access this backend running on your local machine, you need to expose it to the internet. Here are your options:
+The frontend is pure HTML/CSS/JS, so it works with any static hosting:
+- Firebase Hosting
+- Cloudflare Pages
+- AWS S3 + CloudFront
+- Azure Static Web Apps
+- Surge.sh
+- Render
 
-### Option 1: ngrok (Recommended for Testing)
+Simply upload the contents of the `frontend` folder.
 
-1. Install ngrok: https://ngrok.com/download
-2. Run: `ngrok http 8000`
-3. Copy the HTTPS URL (e.g., `https://abc123.ngrok.io`)
-4. Update your frontend's `config.js` with this URL
+## Local Testing
 
-### Option 2: Cloudflare Tunnel (Free, Permanent)
+To test locally before deployment:
 
-1. Install cloudflared: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/
-2. Run: `cloudflared tunnel --url http://localhost:8000`
-3. Copy the provided URL
-4. Update your frontend's `config.js` with this URL
-
-### Option 3: localtunnel
-
+### Using Python
 ```bash
-npx localtunnel --port 8000
+cd frontend
+python3 -m http.server 8080
+```
+Then visit: `http://localhost:8080`
+
+### Using Node.js
+```bash
+cd frontend
+npx http-server -p 8080
 ```
 
-### Option 4: Port Forwarding (Advanced)
-
-1. Configure port forwarding on your router (port 8000)
-2. Find your public IP address
-3. Use `http://YOUR_PUBLIC_IP:8000` as the backend URL
-4. **Important**: Ensure proper firewall and security measures
-
-## API Endpoints
-
-### Authentication
-- `POST /auth/register` - Register new user
-- `POST /auth/login` - Login with mobile and password
-- `POST /auth/send-otp` - Send OTP to mobile
-- `POST /auth/login-with-otp` - Login with OTP
-
-### Predictions
-- `POST /predict` - Detect plant disease from image
-- `POST /predict_soil` - Detect soil type from image
-
-### Recommendations
-- `GET /recommend_fertilizer?crop={crop}&soil_type={soil_type}` - Get fertilizer recommendations
-- `GET /get_user_advice/{user_id}` - Get personalized advice based on user's test results
-
-## Directory Structure
-
-```
-backend-server/
-├── main.py                 # FastAPI application
-├── models/                 # ML model files
-│   ├── plant_disease_model.pth
-│   └── soil_type_model.pth
-├── datasets/               # Training datasets for class names
-│   ├── PlantVillage/
-│   └── Soil Types/
-├── database/               # SQLite database
-│   └── farmx.db
-├── requirements.txt        # Python dependencies
-├── start_server.sh         # Startup script
-└── README.md              # This file
+### Using PHP
+```bash
+cd frontend
+php -S localhost:8080
 ```
 
-## Database
+## File Structure
 
-The application uses SQLite database (`database/farmx.db`) with the following tables:
+```
+frontend/
+├── index.html              # Homepage/Dashboard
+├── auth/
+│   └── login.html         # Login/Register page
+├── disease/
+│   └── index.html         # Disease detection
+├── fertilizer/
+│   └── index.html         # Fertilizer recommendations
+├── weather/
+│   └── index.html         # Weather information
+├── advice/
+│   └── index.html         # Expert advice
+├── market/
+│   └── index.html         # Market prices
+├── protect/
+│   └── index.html         # Crop protection
+└── shared/
+    ├── config.js          # ⚠️ Configure backend URL here
+    ├── api-client.js      # API communication
+    ├── style.css          # Global styles
+    ├── translations.js    # Multi-language support
+    ├── language-manager.js
+    ├── auth-guard.js
+    └── assets/            # Images and icons
+```
 
-### users
-- `id` (INTEGER, PRIMARY KEY)
-- `mobile` (TEXT, UNIQUE)
-- `password` (TEXT)
-- `username` (TEXT)
+## Important Notes
 
-### test_results
-- `id` (INTEGER, PRIMARY KEY)
-- `user_id` (INTEGER, FOREIGN KEY)
-- `test_type` (TEXT: 'disease' or 'soil')
-- `result` (TEXT)
-- `confidence` (REAL)
-- `timestamp` (DATETIME)
+### CORS Configuration
 
-## Security Considerations
+Make sure your backend server allows requests from your frontend domain. In the backend's `main.py`, update:
 
-> **⚠️ IMPORTANT**: This server is configured for development. For production:
+```python
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://your-frontend-domain.com"],  # Your deployed URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
 
-1. **CORS**: Update `main.py` to specify your frontend domain instead of `allow_origins=["*"]`
-2. **HTTPS**: Use a reverse proxy (nginx) with SSL certificate
-3. **Authentication**: Implement JWT tokens or session management
-4. **Rate Limiting**: Add rate limiting to prevent abuse
-5. **Firewall**: Configure firewall rules properly
-6. **Environment Variables**: Move sensitive config to environment variables
+### HTTPS Requirement
+
+For security, especially if using features like camera access, deploy to HTTPS. All the recommended hosting services provide free HTTPS.
+
+### Browser Compatibility
+
+The app works on:
+- ✅ Chrome/Edge (latest)
+- ✅ Firefox (latest)
+- ✅ Safari (latest)
+- ✅ Mobile browsers
+
+## Customization
+
+### Changing Colors/Theme
+
+Edit `shared/style.css` and modify the CSS variables:
+
+```css
+:root {
+    --primary: #4CAF50;
+    --secondary: #2196F3;
+    /* ... other variables */
+}
+```
+
+### Adding Languages
+
+1. Add translations in `shared/translations.js`
+2. Add language button in `shared/language-manager.js`
 
 ## Troubleshooting
 
-### Models not loading
-- Ensure `.pth` files are in the `models/` directory
-- Check that datasets are in `datasets/` directory (needed for class names)
+### "Failed to fetch" errors
+- Check that `config.js` has the correct backend URL
+- Ensure backend server is running and accessible
+- Check browser console for CORS errors
 
-### Database errors
-- Ensure `database/farmx.db` exists and has write permissions
-- The database will be created automatically on first run
+### Images not loading
+- Verify all image paths are relative
+- Check that `shared/assets/` folder has all images
 
-### Port already in use
-- Change the port in `start_server.sh`: `--port 8001`
-- Or kill the process using port 8000: `lsof -ti:8000 | xargs kill`
-
-### CORS errors from frontend
-- Ensure CORS is configured correctly in `main.py`
-- Check that the frontend is using the correct backend URL
+### Login not working
+- Verify backend URL in `config.js`
+- Check backend server logs
+- Ensure database is initialized
 
 ## Support
 
-For issues or questions, check the main FarmX documentation or API documentation at `/docs`.
+For backend setup, see `backend-server/README.md`
+
+## License
+
+FarmX © 2026
